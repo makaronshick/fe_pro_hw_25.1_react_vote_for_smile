@@ -2,6 +2,7 @@ const path = require("path");
 const HtmlPlugin = require("html-webpack-plugin");
 const MiniCssPlugin = require("mini-css-extract-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: "./src/index.js",
@@ -17,6 +18,11 @@ module.exports = {
     }),
     new MiniCssPlugin({
       filename: "[name]-[fullhash].css",
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: 'src/emoticons', to: 'emoticons' }
+      ],
     }),
   ],
   devServer: {
