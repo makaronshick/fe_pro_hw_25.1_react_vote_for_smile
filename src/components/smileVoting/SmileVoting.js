@@ -4,24 +4,21 @@ import "./smileVoting.styles.css";
 export default class SmileVoting extends React.Component {
   constructor(props) {
     super(props);
+
+    const savedVotes = JSON.parse(localStorage.getItem("emoticonsVotes"));
+    const votes = savedVotes ? savedVotes : [
+      { id: 1, src: "./emoticons/1.png", votes: 0 },
+      { id: 2, src: "./emoticons/2.png", votes: 0 },
+      { id: 3, src: "./emoticons/3.png", votes: 0 },
+      { id: 4, src: "./emoticons/4.png", votes: 0 },
+      { id: 5, src: "./emoticons/5.png", votes: 0 },
+    ];
+
     this.state = {
-      emoticons: [
-        { id: 1, src: "./emoticons/1.png", votes: 0 },
-        { id: 2, src: "./emoticons/2.png", votes: 0 },
-        { id: 3, src: "./emoticons/3.png", votes: 0 },
-        { id: 4, src: "./emoticons/4.png", votes: 0 },
-        { id: 5, src: "./emoticons/5.png", votes: 0 },
-      ],
+      emoticons: votes,
       showResults: false,
     };
-  }
-
-  componentDidMount() {
-    const savedVotes = JSON.parse(localStorage.getItem("emoticonsVotes"));
-    if (savedVotes) {
-      this.setState({ emoticons: savedVotes });
-    }
-  }
+  } 
 
   handleVote = (id) => {
     const updatedEmojis = this.state.emoticons.map((emoji) => {
@@ -48,7 +45,7 @@ export default class SmileVoting extends React.Component {
     });
   };
 
-  getWinners = () => {
+  get winners() {
     const maxVotes = Math.max(...this.state.emoticons.map((emoji) => emoji.votes));
     if (maxVotes === 0) {
       return "There is no winner";
@@ -71,11 +68,11 @@ export default class SmileVoting extends React.Component {
         <button className="custom_btn" onClick={this.showResults}>Show Results</button>
         <button className="custom_btn" onClick={this.clearResults}>Clear Results</button>
 
-        {this.state.showResults && (typeof this.getWinners() === 'object') && (
+        {this.state.showResults && (typeof this.winners === 'object') && (
           <div>
             <h2>WINNER IS:</h2>
             <ul>
-              {this.getWinners().map((emoji) => (
+              {this.winners.map((emoji) => (
                 <li key={emoji.id} className="emoji_item">
                   <img src={emoji.src} className="emoji_image" /> {emoji.votes} - Votes
                 </li>
@@ -84,9 +81,9 @@ export default class SmileVoting extends React.Component {
           </div>
         )}
 
-        {this.state.showResults && (typeof this.getWinners() === 'string') && (
+        {this.state.showResults && (typeof this.winners === 'string') && (
           <div>
-            <h2>{this.getWinners()}</h2>
+            <h2>{this.winners}</h2>
           </div>
         )}
       </div>
